@@ -1,6 +1,6 @@
 # Exploratory Data Analysis (EDA)
 
-In the EDA phase, we focus on analyzing data characteristics from multiple tables (Bureau, Bureau Balance, Application, Credit Card Balance, …) to detect trends, anomalies, and relationships between features and the target variable `TARGET` (default = 1, non-default = 0).
+In the EDA phase, II focus on analyzing data characteristics from multiple tables (Bureau, Bureau Balance, Application, Credit Card Balance, …) to detect trends, anomalies, and relationships between features and the target variable `TARGET` (default = 1, non-default = 0).
 
 ---
 
@@ -63,11 +63,7 @@ In the EDA phase, we focus on analyzing data characteristics from multiple table
 
 ---
 
-## 5. Conclusions from EDA
-- Dataset has multiple quality issues (missing values, outliers, irrelevant variables).  
-- Many categorical features are imbalanced → need to be handled during feature engineering.  
-- Several standout features with strong predictive power: `EXT_SOURCE` variables, job/income information, address characteristics.  
-- Time-related variables (`DAYS_*`) contain many errors but also hold important signals for credit risk.
+
 # Feature Engineering & Preprocessing
 
 This repository documents the **feature engineering and preprocessing pipeline** applied to multiple datasets for credit risk analysis and predictive modeling. The goal of this process is to transform raw financial and behavioral data into structured, domain-relevant features that enhance model performance, interpretability, and robustness.
@@ -293,26 +289,18 @@ params = {
     'eta0': 0.011616
 }
 
-### ⚙️ Hyperparameter Tuning
+
+⚙️ Hyperparameter Tuning
 random_search_cv(hyperparams, n_iter=67, n_jobs=2)
 hyperparams = {'alpha': np.logspace(-4, 2)}
 
-
-### 📈 Results
-Best threshold (J-statistic): 0.4719
-
-Training set:
-
-ROC-AUC: 0.7965
-
-Precision: 0.1807
-
-Recall: 0.7400
-
-Cross-validation:
-
-ROC-AUC: 0.7894
-
-Precision: 0.1784
-
-Recall: 0.7299
+📈 Results
+- **Best threshold (J-statistic)**: 0.4719 
+- **Training set**:
+  - ROC-AUC: `0.7965`  
+  - Precision: `0.1807`  
+  - Recall: `0.7400`  
+- **Cross-validation**:
+  - ROC-AUC: `0.7894`  
+  - Precision: `0.1784`  
+  - Recall: `0.7299`  
