@@ -223,7 +223,7 @@ The main training and testing datasets (`application_train.csv` and `application
 - Time-series enriched features enable **robust predictive modeling**.  
 
 ---
-# 📊 Loan Default Prediction - Modelling
+# Modelling
 
 ## 🎯 Objective
 The primary goal of this modeling task was to **predict the likelihood of loan default by clients**, aiding in effective **risk management** and **decision-making**.  
