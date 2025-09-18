@@ -294,27 +294,25 @@ params = {
 }
 
 ### ⚙️ Hyperparameter Tuning
-Hyperparameters were tuned using **Random Search + Cross-Validation**.  
-The search grid included:
-- `max_depth`: [5, 10, 15, 20, None]  
-- `min_samples_split`: [2, 5, 10, 20]  
-- `min_samples_leaf`: [1, 5, 10]  
-- `max_features`: ["sqrt", "log2", None]  
-- `criterion`: ["gini", "entropy"]
+random_search_cv(hyperparams, n_iter=67, n_jobs=2)
+hyperparams = {'alpha': np.logspace(-4, 2)}
 
-The **optimal parameters** selected were:  
-`max_depth=5, min_samples_split=10, min_samples_leaf=5, max_features=None, criterion="entropy"`
 
 ### 📈 Results
-- **Best threshold (J-statistic)**: 0.0861  
-- **Training set**:
-  - ROC-AUC: `0.7577`  
-  - Precision: `0.1652`  
-  - Recall: `0.6930`  
-- **Cross-validation**:
-  - ROC-AUC: `0.7516`  
-  - Precision: `0.1639`  
-  - Recall: `0.6922`  
+Best threshold (J-statistic): 0.4719
 
+Training set:
 
+ROC-AUC: 0.7965
 
+Precision: 0.1807
+
+Recall: 0.7400
+
+Cross-validation:
+
+ROC-AUC: 0.7894
+
+Precision: 0.1784
+
+Recall: 0.7299
