@@ -1,71 +1,71 @@
 # Exploratory Data Analysis (EDA)
 
-Trong giai đoạn EDA, chúng tôi tập trung phân tích đặc điểm dữ liệu từ nhiều bảng (Bureau, Bureau Balance, Application, Credit Card Balance, …) nhằm phát hiện xu hướng, bất thường và mối quan hệ giữa đặc trưng và biến mục tiêu `TARGET` (khách hàng vỡ nợ = 1, không vỡ nợ = 0).
+In the EDA phase, we focus on analyzing data characteristics from multiple tables (Bureau, Bureau Balance, Application, Credit Card Balance, …) to detect trends, anomalies, and relationships between features and the target variable `TARGET` (default = 1, non-default = 0).
 
 ---
 
 ## 1. Bureau EDA
 
 ### Categorical Variables
-- **CREDIT_TYPE**: Nhiều loại tín dụng hiếm → gom nhóm thành `'Rare'` (trừ *Consumer credit* và *Credit card*).  
-- **CREDIT_ACTIVE**: Các giá trị `'Sold'` và `'Bad Debt'` được thay bằng `'Active'` để tập trung vào tình trạng tín dụng hiện tại.  
-- **CREDIT_CURRENCY** và **SK_ID_BUREAU**: Bị loại bỏ vì dư thừa hoặc không hữu ích.
+- **CREDIT_TYPE**: Many rare credit types → grouped into `'Rare'` (except *Consumer credit* and *Credit card*).  
+- **CREDIT_ACTIVE**: The values `'Sold'` and `'Bad Debt'` were replaced with `'Active'` to focus on the current credit status.  
+- **CREDIT_CURRENCY** and **SK_ID_BUREAU**: Removed due to redundancy or irrelevance.
 
 ### Numerical Variables
-- **YEARS_CREDIT**: Phân phối tương đồng giữa hai nhóm → ít khả năng là biến dự báo mạnh.  
-- **DAYS_CREDIT_ENDDATE**: Xuất hiện ngoại lai (~115 năm) → cần xử lý trong giai đoạn tiền xử lý.
+- **YEARS_CREDIT**: Similar distribution between the two groups → unlikely to be a strong predictor.  
+- **DAYS_CREDIT_ENDDATE**: Outliers (~115 years) detected → need to be handled during preprocessing.
 
 ---
 
 ## 2. Bureau Balance EDA
 
 - **STATUS**:  
-  - Các giá trị chính: `C` (đóng), `X` (không rõ), `0` (không quá hạn).  
-  - Các giá trị `1–5` ít xuất hiện → dữ liệu mất cân bằng.  
+  - Main values: `C` (closed), `X` (unknown), `0` (no overdue).  
+  - Values `1–5` are rare → imbalanced data.  
 - **MONTHS_BALANCE**:  
-  - Biểu diễn mốc thời gian so với ngày nộp hồ sơ.  
-  - Hầu hết tập trung ở -1 đến -5 tháng, một số hợp đồng cũ hơn ở -50 tháng.  
+  - Represents the time offset relative to the application date.  
+  - Mostly concentrated between -1 to -5 months, with some older contracts around -50 months.  
 
 ---
 
 ## 3. Missing Values & Data Quality
 
-- **AMT_APPLICATION**: Thiếu ~5%.  
-- **PRODUCT_COMBINATION**: Thiếu ~6%.  
-- Một số bảng khác có tới **~55% cột chứa NaN**, nhiều cột vượt 70%.  
-- Các biến `DAYS_*` chứa nhiều giá trị không hợp lý (`365243`, tương ứng ~1000 năm) → cần loại bỏ/ghi đè.
+- **AMT_APPLICATION**: ~5% missing.  
+- **PRODUCT_COMBINATION**: ~6% missing.  
+- Some tables have up to **~55% of columns with NaN**, many exceeding 70%.  
+- `DAYS_*` variables contain many invalid values (`365243`, equivalent to ~1000 years) → need removal or replacement.  
 
 ---
 
 ## 4. Key Observations on Features
 
 ### Application Data
-- **CNT_CHILDREN**: Trung bình <1, nhưng có giá trị ngoại lai (12 con).  
-- **AMT_INCOME_TOTAL**: Ngoại lai tới 117 triệu USD.  
-- **DAYS_EMPLOYED**: Ngoại lai ~1000 năm.  
-- **Target**: Dataset mất cân bằng (Defaulters ~8.1%, Non-defaulters ~91.9%).
+- **CNT_CHILDREN**: Average <1, but extreme outliers (12 children).  
+- **AMT_INCOME_TOTAL**: Outlier up to 117 million USD.  
+- **DAYS_EMPLOYED**: Outlier ~1000 years.  
+- **Target**: Imbalanced dataset (Defaulters ~8.1%, Non-defaulters ~91.9%).
 
 ### Categorical Variables
-- Một số biến quan trọng với `TARGET`:  
+- Some important features correlated with `TARGET`:  
   - `OCCUPATION_TYPE`, `ORGANIZATION_TYPE`, `NAME_INCOME_TYPE`.  
-  - Khách hàng có nghề nghiệp/thu nhập ổn định thường ít vỡ nợ hơn.  
-- **Địa chỉ (REGION / CITY)**: Người có địa chỉ cư trú ≠ địa chỉ làm việc/liên hệ → nguy cơ vỡ nợ cao hơn.  
-- **CODE_GENDER**: Nam có tỷ lệ vỡ nợ cao hơn nữ (10.15% vs 7%).  
-- **FLAG_PHONE**: Người cung cấp số điện thoại cá nhân có tỷ lệ vỡ nợ thấp hơn.  
-- **WALLSMATERIAL_MODE**: Khách hàng sống trong nhà gỗ hoặc vật liệu rẻ → rủi ro vỡ nợ cao hơn.
+  - Applicants with stable jobs/income are less likely to default.  
+- **Address (REGION / CITY)**: People whose residential address ≠ work/contact address → higher risk of default.  
+- **CODE_GENDER**: Males have higher default rate than females (10.15% vs 7%).  
+- **FLAG_PHONE**: Applicants who provide a personal phone number have lower default rates.  
+- **WALLSMATERIAL_MODE**: Customers living in wooden or low-quality material houses → higher risk of default.
 
 ### Numerical Variables
-- **AMT_CREDIT, AMT_ANNUITY, AMT_GOODS_PRICE**: Người vỡ nợ thường vay ít hơn → gợi ý tình hình tài chính kém.  
-- **DAYS_BIRTH**: Nhóm tuổi 30–40 có tỷ lệ vỡ nợ cao nhất.  
-- **DAYS_REGISTRATION, DAYS_ID_PUBLISH**: Đăng ký/thay đổi giấy tờ gần ngày nộp đơn → nguy cơ vỡ nợ cao hơn.  
-- **OWN_CAR_AGE**: Người mới mua xe (tuổi xe thấp) → ít vỡ nợ hơn.  
-- **EXT_SOURCE_1/2/3**: Có tương quan cao với `TARGET` → biến dự báo quan trọng.
+- **AMT_CREDIT, AMT_ANNUITY, AMT_GOODS_PRICE**: Defaulters often borrow smaller amounts → suggesting weaker financial status.  
+- **DAYS_BIRTH**: Age group 30–40 has the highest default rate.  
+- **DAYS_REGISTRATION, DAYS_ID_PUBLISH**: Registration/document changes close to application date → higher risk of default.  
+- **OWN_CAR_AGE**: Newer car owners (low car age) → less likely to default.  
+- **EXT_SOURCE_1/2/3**: Strong correlation with `TARGET` → key predictive features.
 
 ---
 
 ## 5. Conclusions from EDA
-- Dataset có nhiều vấn đề chất lượng (missing values, ngoại lai, biến không hữu ích).  
-- Nhiều đặc trưng phân loại mất cân bằng → cần xử lý khi feature engineering.  
-- Một số đặc trưng nổi bật có giá trị dự báo tốt: `EXT_SOURCE` variables, thông tin nghề nghiệp/thu nhập, đặc điểm địa chỉ.  
-- Biến thời gian (`DAYS_*`) chứa nhiều lỗi nhưng cũng tiềm ẩn tín hiệu quan trọng về rủi ro tín dụng.  
-# House-Credit-Default-Risk
+- Dataset has multiple quality issues (missing values, outliers, irrelevant variables).  
+- Many categorical features are imbalanced → need to be handled during feature engineering.  
+- Several standout features with strong predictive power: `EXT_SOURCE` variables, job/income information, address characteristics.  
+- Time-related variables (`DAYS_*`) contain many errors but also hold important signals for credit risk.  
+
