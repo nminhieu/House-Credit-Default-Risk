@@ -227,8 +227,94 @@ The main training and testing datasets (`application_train.csv` and `application
 - Time-series enriched features enable **robust predictive modeling**.  
 
 ---
+# 📊 Loan Default Prediction - Modelling
 
-## 📌 Conclusion
-The preprocessing and feature engineering pipeline transforms raw, complex financial data into structured, insightful features. By combining **domain knowledge, statistical transformations, and temporal analysis**, this workflow provides a robust foundation for machine learning models in **credit risk prediction**.
+## 🎯 Objective
+The primary goal of this modeling task was to **predict the likelihood of loan default by clients**, aiding in effective **risk management** and **decision-making**.  
+Two models were developed and evaluated: **Decision Tree** and **Logistic Regression with Elastic Net regularization**.
+
+---
+
+## 🌳 Decision Tree
+
+### 🔹 Why Decision Tree?
+The **Decision Tree algorithm** was chosen as the baseline model because:
+- **Interpretability**: The resulting tree structure can be easily visualized and understood.  
+- **Minimal preprocessing**: Handles both numerical and categorical data without scaling.  
+- **Efficiency**: Works well for initial benchmarks.  
+
+### ⚙️ Hyperparameter Tuning
+Hyperparameters were tuned using **Random Search + Cross-Validation**.  
+The search grid included:
+- `max_depth`: [5, 10, 15, 20, None]  
+- `min_samples_split`: [2, 5, 10, 20]  
+- `min_samples_leaf`: [1, 5, 10]  
+- `max_features`: ["sqrt", "log2", None]  
+- `criterion`: ["gini", "entropy"]
+
+The **optimal parameters** selected were:  
+`max_depth=5, min_samples_split=10, min_samples_leaf=5, max_features=None, criterion="entropy"`
+
+### 📈 Results
+- **Best threshold (J-statistic)**: 0.0861  
+- **Training set**:
+  - ROC-AUC: `0.7577`  
+  - Precision: `0.1652`  
+  - Recall: `0.6930`  
+- **Cross-validation**:
+  - ROC-AUC: `0.7516`  
+  - Precision: `0.1639`  
+  - Recall: `0.6922`  
+
+✅ The Decision Tree baseline demonstrates **balanced recall and precision** while maintaining **competitive discriminatory power**.
+
+---
+
+## 📉 Logistic Regression with Elastic Net
+
+### 🔹 Why Logistic Regression + Elastic Net?
+Logistic Regression provides a **probabilistic framework** for binary classification.  
+By using **Elastic Net regularization (L1 + L2)**, the model gains:
+- **Feature selection ability (L1)**  
+- **Stability and robustness (L2)**  
+- **Better generalization** on high-dimensional data  
+
+### ⚙️ Parameters
+The model was trained using **SGD with Elastic Net regularization**, with parameters:
+```python
+params = {
+    'loss': 'log_loss',
+    'penalty': 'elasticnet',
+    'random_state': 42,
+    'class_weight': 'balanced',
+    'n_jobs': -1,
+    'learning_rate': 'adaptive',
+    'l1_ratio': 0.16,
+    'eta0': 0.011616
+}
+
+### ⚙️ Hyperparameter Tuning
+Hyperparameters were tuned using **Random Search + Cross-Validation**.  
+The search grid included:
+- `max_depth`: [5, 10, 15, 20, None]  
+- `min_samples_split`: [2, 5, 10, 20]  
+- `min_samples_leaf`: [1, 5, 10]  
+- `max_features`: ["sqrt", "log2", None]  
+- `criterion`: ["gini", "entropy"]
+
+The **optimal parameters** selected were:  
+`max_depth=5, min_samples_split=10, min_samples_leaf=5, max_features=None, criterion="entropy"`
+
+### 📈 Results
+- **Best threshold (J-statistic)**: 0.0861  
+- **Training set**:
+  - ROC-AUC: `0.7577`  
+  - Precision: `0.1652`  
+  - Recall: `0.6930`  
+- **Cross-validation**:
+  - ROC-AUC: `0.7516`  
+  - Precision: `0.1639`  
+  - Recall: `0.6922`  
+
 
 
